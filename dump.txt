@@ -1,0 +1,57 @@
+1. Input Data
+ID obat
+Nama obat
+Jenis/Bentuk (tablet, sirup, dll)
+Stok
+Harga
+Expired
+
+Validasi:
+ID tidak boleh duplikat
+stok ≥ 0
+harga ≥ 0
+Simpan ke array/vector
+
+
+2. Lihat Data
+ID obat
+Nama obat
+Kategori
+Jenis
+Stok
+Harga
+Expired
+
+Tambahan (hasil olahan program):
+
+Status stok
+"Habis" → stok = 0
+"Menipis" → stok < 5
+"Tersedia" → stok ≥ 5
+
+Status expired
+"Kadaluarsa" → jika sudah lewat tanggal
+"Akan expired" → mendekati (misal < 30 hari)
+"Aman"
+
+
+3. Sorting
+based on ???
+Ascending
+Descending
+
+
+4. Search
+Cari berdasarkan ???
+Cari berdasarkan nama
+Cari berdasarkan kategori
+
+
+5. Delete
+Hapus berdasarkan ID
+
+
+6. Edit
+
+
+7. Exit
