@@ -7,10 +7,8 @@ Harga
 Expired
 
 Validasi:
-ID tidak boleh duplikat
 stok ≥ 0
 harga ≥ 0
-Simpan ke array/vector
 
 
 2. Lihat Data
@@ -22,7 +20,7 @@ Stok
 Harga
 Expired
 
-Tambahan (hasil olahan program):
+detail:
 
 Status stok
 "Habis" → stok = 0
