@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <string>
+#include <stdlib.h> // Ditambahkan untuk system("cls")
 using namespace std;
 
 //data obat
@@ -88,6 +88,7 @@ void tambahNode(Obat obatBaru) {
 
 //input data
 void inputData() {
+    system("cls");
     Obat obatBaru;
 
     cout << "\n=== INPUT DATA ===\n";
@@ -96,7 +97,8 @@ void inputData() {
     cin >> obatBaru.id;
 
     if (idSudahAda(obatBaru.id)) {
-        cout << "ID sudah ada.\n";
+        cout << "Error: ID sudah ada.\n";
+        system("pause");
         return;
     }
 
@@ -108,50 +110,59 @@ void inputData() {
     cout << "Jenis obat    : ";
     getline(cin, obatBaru.jenis);
 
+    // Error handling stok (input harus angka)
     cout << "Stok          : ";
-    cin >> obatBaru.stok;
-
-    while (obatBaru.stok < 0) {
-        cout << "Stok tidak boleh negatif.\n";
+    while (!(cin >> obatBaru.stok) || obatBaru.stok < 0) {
+        cout << "Input tidak valid (harus angka & tidak negatif).\n";
         cout << "Stok          : ";
-        cin >> obatBaru.stok;
+        cin.clear();
+        cin.ignore(1000, '\n');
     }
 
+    // Error handling harga (input harus angka)
     cout << "Harga         : ";
-    cin >> obatBaru.harga;
-
-    while (obatBaru.harga < 0) {
-        cout << "Harga tidak boleh negatif.\n";
+    while (!(cin >> obatBaru.harga) || obatBaru.harga < 0) {
+        cout << "Input tidak valid (harus angka & tidak negatif).\n";
         cout << "Harga         : ";
-        cin >> obatBaru.harga;
+        cin.clear();
+        cin.ignore(1000, '\n');
     }
 
+    // Error handling expired (input harus angka)
     cout << "Expired YYYYMMDD : ";
-    cin >> obatBaru.expired;
+    while (!(cin >> obatBaru.expired)) {
+        cout << "Input tidak valid (harus format YYYYMMDD).\n";
+        cout << "Expired YYYYMMDD : ";
+        cin.clear();
+        cin.ignore(1000, '\n');
+    }
 
     tambahNode(obatBaru);
-
     cout << "Data berhasil ditambahkan.\n";
+    system("pause");
 }
 
 //lihat satu data
 void tampilSatu(Node* bantu) {
-    cout << "ID obat        : " << bantu->data.id << endl;
-    cout << "Nama obat      : " << bantu->data.nama << endl;
-    cout << "Jenis obat     : " << bantu->data.jenis << endl;
-    cout << "Stok           : " << bantu->data.stok << endl;
-    cout << "Harga          : " << bantu->data.harga << endl;
-    cout << "Expired        : " << bantu->data.expired << endl;
-    cout << "Status stok    : " << statusStok(bantu->data.stok) << endl;
-    cout << "Status expired : " << statusExpired(bantu->data.expired) << endl;
+    cout << "ID obat : " << bantu->data.id << endl;
+    cout << "Nama obat: " << bantu->data.nama << endl;
+    cout << "Jenis obat : " << bantu->data.jenis << endl;
+    cout << "Stok : " << bantu->data.stok << endl;
+    cout << "Harga: " << bantu->data.harga << endl;
+    cout << "Expired: " << bantu->data.expired << endl;
+    cout << "Status stok : " << statusStok(bantu->data.stok) << endl;
+    cout << "Status expired: " << statusExpired(bantu->data.expired) << endl;
+    cout << "---------------------------\n";
 }
 
 //lihat data
 void lihatData() {
+    system("cls");
     cout << "\n=== LIHAT DATA ===\n";
 
     if (head == NULL) {
         cout << "Data masih kosong.\n";
+        system("pause");
         return;
     }
 
@@ -165,6 +176,7 @@ void lihatData() {
         bantu = bantu->next;
         nomor++;
     } while (bantu != head);
+    system("pause");
 }
 
 //sorting stok
@@ -212,25 +224,36 @@ void sortingStok(bool ascending) {
 
 //menu sorting
 void menuSorting() {
+    system("cls");
     int pilih;
 
     cout << "\n=== SORTING STOK ===\n";
     cout << "1. Ascending\n";
     cout << "2. Descending\n";
     cout << "Pilih: ";
-    cin >> pilih;
+    
+    if(!(cin >> pilih)) {
+        cin.clear();
+        cin.ignore(1000, '\n');
+        cout << "Input tidak valid.\n";
+        system("pause");
+        return;
+    }
 
     if (pilih == 1) sortingStok(true);
     else if (pilih == 2) sortingStok(false);
     else cout << "Pilihan tidak valid.\n";
+    system("pause");
 }
 
 //search jenis
 void searchJenis() {
+    system("cls");
     cout << "\n=== SEARCH JENIS ===\n";
 
     if (head == NULL) {
         cout << "Data masih kosong.\n";
+        system("pause");
         return;
     }
 
@@ -259,6 +282,7 @@ void searchJenis() {
     if (!ditemukan) {
         cout << "Data tidak ditemukan.\n";
     }
+    system("pause");
 }
 
 //cari id
@@ -280,10 +304,12 @@ Node* cariID(string id) {
 
 //delete data
 void deleteData() {
+    system("cls");
     cout << "\n=== DELETE DATA ===\n";
 
     if (head == NULL) {
         cout << "Data masih kosong.\n";
+        system("pause");
         return;
     }
 
@@ -297,6 +323,7 @@ void deleteData() {
 
     if (hapus == NULL) {
         cout << "Data tidak ditemukan.\n";
+        system("pause");
         return;
     }
 
@@ -308,6 +335,7 @@ void deleteData() {
 
     if (yakin != 'y' && yakin != 'Y') {
         cout << "Delete dibatalkan.\n";
+        system("pause");
         return;
     }
 
@@ -328,14 +356,17 @@ void deleteData() {
     }
 
     cout << "Data berhasil dihapus.\n";
+    system("pause");
 }
 
 //edit data
 void editData() {
+    system("cls");
     cout << "\n=== EDIT DATA ===\n";
 
     if (head == NULL) {
         cout << "Data masih kosong.\n";
+        system("pause");
         return;
     }
 
@@ -349,6 +380,7 @@ void editData() {
 
     if (edit == NULL) {
         cout << "Data tidak ditemukan.\n";
+        system("pause");
         return;
     }
 
@@ -363,8 +395,14 @@ void editData() {
     cout << "5. Edit expired\n";
     cout << "6. Edit semua\n";
     cout << "Pilih: ";
-    cin >> pilih;
-    cout << "//akhir menu edit\n";
+    
+    if(!(cin >> pilih)) {
+        cin.clear();
+        cin.ignore(1000, '\n');
+        cout << "Pilihan tidak valid.\n";
+        system("pause");
+        return;
+    }
 
     cin.ignore();
 
@@ -378,27 +416,24 @@ void editData() {
     } 
     else if (pilih == 3) {
         cout << "Stok baru: ";
-        cin >> edit->data.stok;
-
-        while (edit->data.stok < 0) {
-            cout << "Stok tidak boleh negatif.\n";
-            cout << "Stok baru: ";
-            cin >> edit->data.stok;
+        while (!(cin >> edit->data.stok) || edit->data.stok < 0) {
+            cout << "Input tidak valid.\nStok baru: ";
+            cin.clear(); cin.ignore(1000, '\n');
         }
     } 
     else if (pilih == 4) {
         cout << "Harga baru: ";
-        cin >> edit->data.harga;
-
-        while (edit->data.harga < 0) {
-            cout << "Harga tidak boleh negatif.\n";
-            cout << "Harga baru: ";
-            cin >> edit->data.harga;
+        while (!(cin >> edit->data.harga) || edit->data.harga < 0) {
+            cout << "Input tidak valid.\nHarga baru: ";
+            cin.clear(); cin.ignore(1000, '\n');
         }
     } 
     else if (pilih == 5) {
         cout << "Expired baru YYYYMMDD: ";
-        cin >> edit->data.expired;
+        while (!(cin >> edit->data.expired)) {
+            cout << "Input tidak valid.\nExpired baru: ";
+            cin.clear(); cin.ignore(1000, '\n');
+        }
     } 
     else if (pilih == 6) {
         cout << "Nama baru: ";
@@ -408,32 +443,31 @@ void editData() {
         getline(cin, edit->data.jenis);
 
         cout << "Stok baru: ";
-        cin >> edit->data.stok;
-
-        while (edit->data.stok < 0) {
-            cout << "Stok tidak boleh negatif.\n";
-            cout << "Stok baru: ";
-            cin >> edit->data.stok;
+        while (!(cin >> edit->data.stok) || edit->data.stok < 0) {
+            cout << "Salah input.\nStok baru: ";
+            cin.clear(); cin.ignore(1000, '\n');
         }
 
         cout << "Harga baru: ";
-        cin >> edit->data.harga;
-
-        while (edit->data.harga < 0) {
-            cout << "Harga tidak boleh negatif.\n";
-            cout << "Harga baru: ";
-            cin >> edit->data.harga;
+        while (!(cin >> edit->data.harga) || edit->data.harga < 0) {
+            cout << "Salah input.\nHarga baru: ";
+            cin.clear(); cin.ignore(1000, '\n');
         }
 
         cout << "Expired baru YYYYMMDD: ";
-        cin >> edit->data.expired;
+        while (!(cin >> edit->data.expired)) {
+            cout << "Salah input.\nExpired baru: ";
+            cin.clear(); cin.ignore(1000, '\n');
+        }
     } 
     else {
         cout << "Pilihan tidak valid.\n";
+        system("pause");
         return;
     }
 
     cout << "Data berhasil diedit.\n";
+    system("pause");
 }
 
 //simpan file
@@ -473,15 +507,17 @@ void bacaFile() {
     string stokText, hargaText, expiredText;
 
     while (getline(file, obat.id)) {
+        if (obat.id == "") break; // Error handling file kosong
         getline(file, obat.nama);
         getline(file, obat.jenis);
         getline(file, stokText);
         getline(file, hargaText);
         getline(file, expiredText);
 
-        obat.stok = stoi(stokText);
-        obat.harga = stoi(hargaText);
-        obat.expired = stoi(expiredText);
+        // Konversi string ke int
+        obat.stok = atoi(stokText.c_str());
+        obat.harga = atoi(hargaText.c_str());
+        obat.expired = atoi(expiredText.c_str());
 
         tambahNode(obat);
     }
@@ -507,14 +543,20 @@ void hapusMemori() {
 
 //menu
 int main() {
+    system("cls");
     int pilih;
 
     cout << "Masukkan tanggal hari ini YYYYMMDD: ";
-    cin >> tanggalSekarang;
+    while (!(cin >> tanggalSekarang)) {
+        cout << "Input harus angka YYYYMMDD: ";
+        cin.clear();
+        cin.ignore(1000, '\n');
+    }
 
     bacaFile();
 
     do {
+        system("cls");
         cout << "\n=== INVENTARIS APOTEK ===\n";
         cout << "1. Input Data\n";
         cout << "2. Lihat Data\n";
@@ -524,7 +566,13 @@ int main() {
         cout << "6. Edit\n";
         cout << "7. Exit\n";
         cout << "Pilih menu: ";
-        cin >> pilih;
+        
+        // Error handling input menu
+        if (!(cin >> pilih)) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            pilih = 0; // Memaksa masuk ke pilihan tidak valid
+        }
 
         if (pilih == 1) {
             inputData();
@@ -554,11 +602,11 @@ int main() {
             cout << "Program selesai.\n";
         } 
         else {
-            cout << "Pilihan tidak valid.\n";
+            cout << "Pilihan tidak valid. Silakan coba lagi.\n";
+            system("pause");
         }
 
     } while (pilih != 7);
 
     return 0;
 }
-//akhir menu
