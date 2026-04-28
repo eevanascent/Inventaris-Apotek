@@ -1,0 +1,54 @@
+9
+Otopain
+Tetes
+0
+120000
+20270928
+7
+Hydrocortisone 1%
+Krim
+9
+15000
+20260312
+3
+Amoxicillin 500mg
+Kapsul
+20
+10000
+20260701
+1
+Paracetamol
+Tablet
+32
+5000
+20270702
+6
+Antasida Doen 60ml
+Sirup
+42
+10000
+20260509
+4
+Omeprazole 20mg
+Kapsul
+50
+13000
+20261212
+8
+Insto
+Tetes
+51
+18000
+20260705
+5
+OBH
+Sirup
+61
+15000
+20270402
+2
+Amplodipine
+Tablet
+16000
+16000
+20260515
