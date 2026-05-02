@@ -1,7 +1,20 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h> // Ditambahkan untuk system("cls")
+#include <iomanip> // ditambahkan untuk setw
 using namespace std;
+
+//admin
+struct admin
+{
+    string username, password;
+};
+
+//username dan password
+admin akun[2] = {
+    {"Rafif", "079"},
+    {"Vania", "071"}
+};
 
 //data obat
 struct Obat {
@@ -26,7 +39,7 @@ int tanggalSekarang;
 //status stok
 string statusStok(int stok) {
     if (stok == 0) return "Habis";
-    else if (stok < 5) return "Menipis";
+    else if (stok < 10) return "Menipis";
     else return "Tersedia";
 }
 
@@ -89,70 +102,108 @@ void tambahNode(Obat obatBaru) {
 //input data
 void inputData() {
     system("cls");
-    Obat obatBaru;
-
+    int input;
+    
     cout << "\n=== INPUT DATA ===\n";
 
-    cout << "ID obat       : ";
-    cin >> obatBaru.id;
-
-    if (idSudahAda(obatBaru.id)) {
-        cout << "Error: ID sudah ada.\n";
-        system("pause");
-        return;
+    cout << "Ingin input berapa data? : ";
+    //error handling jumlah data (input harus angka)
+    while (!(cin >> input)) {
+        cout << "Input harus berupa angka : ";
+        cin.clear();
+        cin.ignore(1000, '\n');
     }
+        
+    for (int i = 0; i < input; i++)
+    {
+        Obat obatBaru;
 
-    cin.ignore();
+        cout << "\nData ke-" << i + 1 << endl;
 
-    cout << "Nama obat     : ";
-    getline(cin, obatBaru.nama);
+        //error handling ID (ID harus berbeda)
+        cout << "ID obat       : ";
+        while (!(cin >> obatBaru.id) || idSudahAda(obatBaru.id))
+        {
+            cout << "Error: ID sudah ada.\n";
+            cout << "ID obat       : ";
+            cin.clear();
+            cin.ignore(1000,'\n');
+        }
 
-    cout << "Jenis obat    : ";
-    getline(cin, obatBaru.jenis);
+        cin.ignore();
 
-    // Error handling stok (input harus angka)
-    cout << "Stok          : ";
-    while (!(cin >> obatBaru.stok) || obatBaru.stok < 0) {
-        cout << "Input tidak valid (harus angka & tidak negatif).\n";
+        cout << "Nama obat     : ";
+        getline(cin, obatBaru.nama);
+
+        cout << "Jenis obat    : ";
+        getline(cin, obatBaru.jenis);
+
+        // Error handling stok (input harus angka)
         cout << "Stok          : ";
-        cin.clear();
-        cin.ignore(1000, '\n');
-    }
+        while (!(cin >> obatBaru.stok) || obatBaru.stok < 0) {
+            cout << "Input tidak valid (harus angka & tidak negatif).\n";
+            cout << "Stok          : ";
+            cin.clear();
+            cin.ignore(1000, '\n');
+        }
 
-    // Error handling harga (input harus angka)
-    cout << "Harga         : ";
-    while (!(cin >> obatBaru.harga) || obatBaru.harga < 0) {
-        cout << "Input tidak valid (harus angka & tidak negatif).\n";
+        // Error handling harga (input harus angka)
         cout << "Harga         : ";
-        cin.clear();
-        cin.ignore(1000, '\n');
-    }
+        while (!(cin >> obatBaru.harga) || obatBaru.harga < 0) {
+            cout << "Input tidak valid (harus angka & tidak negatif).\n";
+            cout << "Harga         : ";
+            cin.clear();
+            cin.ignore(1000, '\n');
+        }
 
-    // Error handling expired (input harus angka)
-    cout << "Expired YYYYMMDD : ";
-    while (!(cin >> obatBaru.expired)) {
-        cout << "Input tidak valid (harus format YYYYMMDD).\n";
+        // Error handling expired (input harus angka)
         cout << "Expired YYYYMMDD : ";
-        cin.clear();
-        cin.ignore(1000, '\n');
+        while (!(cin >> obatBaru.expired)) {
+            cout << "Input tidak valid (harus format YYYYMMDD).\n";
+            cout << "Expired YYYYMMDD : ";
+            cin.clear();
+            cin.ignore(1000, '\n');
+        }
+
+        tambahNode(obatBaru);
     }
 
-    tambahNode(obatBaru);
     cout << "Data berhasil ditambahkan.\n";
     system("pause");
 }
 
+//menampilkan header tabel
+void headertabel()
+{
+    
+    cout << setfill('-') << setw(115) << " " << endl;
+    cout << setfill(' ');
+    cout << left << setw(5) << "NO" << " | "
+        << setw(5) << "ID Obat" << " | "
+        << setw(18) << "Nama Obat" << " | "
+        << setw(12) << "Jenis Obat" << " | "
+        << setw(8) << "Stok" << " | "
+        << setw(8) << "Harga" << " | "
+        << setw(10) << "Expired" << " | "
+        << setw(12) << "Status Stok" << " | "
+        << setw(12) << "Status Expaired" << "| ";
+    cout << setfill('-') << setw(115) << " " << endl;
+    
+}
+
 //lihat satu data
-void tampilSatu(Node* bantu) {
-    cout << "ID obat : " << bantu->data.id << endl;
-    cout << "Nama obat: " << bantu->data.nama << endl;
-    cout << "Jenis obat : " << bantu->data.jenis << endl;
-    cout << "Stok : " << bantu->data.stok << endl;
-    cout << "Harga: " << bantu->data.harga << endl;
-    cout << "Expired: " << bantu->data.expired << endl;
-    cout << "Status stok : " << statusStok(bantu->data.stok) << endl;
-    cout << "Status expired: " << statusExpired(bantu->data.expired) << endl;
-    cout << "---------------------------\n";
+void tampilSatu(Node* bantu, int nomor) {
+    
+    cout << setfill(' ');
+    cout << left << setw(5) << nomor << " | " 
+        << setw(7) << bantu->data.id << " | "
+        << setw(18) << bantu->data.nama << " | "
+        << setw(12) <<bantu->data.jenis << " | "
+        << setw(8) << bantu->data.stok << " | "
+        << setw(8) << bantu->data.harga << " | "
+        << setw(10) << bantu->data.expired << " | "
+        << setw(12) << statusStok(bantu->data.stok) << " | " 
+        << setw(12) << statusExpired(bantu->data.expired) << " | " << endl;
 }
 
 //lihat data
@@ -166,16 +217,19 @@ void lihatData() {
         return;
     }
 
+    headertabel();
+
     Node* bantu = head;
     int nomor = 1;
 
     do {
-        cout << "\nData ke-" << nomor << endl;
-        tampilSatu(bantu);
+        
+        tampilSatu(bantu, nomor);
 
         bantu = bantu->next;
         nomor++;
     } while (bantu != head);
+    cout << setfill('-') << setw(115) << " " << endl;
     system("pause");
 }
 
@@ -270,8 +324,13 @@ void searchJenis() {
 
     do {
         if (bantu->data.jenis == cari) {
-            cout << "\nData ditemukan ke-" << nomor << endl;
-            tampilSatu(bantu);
+            if (!ditemukan)
+            {
+                cout << "\nData ditemukan!" << endl;
+                headertabel();
+
+            }
+            tampilSatu(bantu, nomor);
             ditemukan = true;
         }
 
@@ -328,7 +387,9 @@ void deleteData() {
     }
 
     cout << "\nData yang akan dihapus:\n";
-    tampilSatu(hapus);
+    headertabel();
+    tampilSatu(hapus, 1);
+    cout << setfill('-') << setw(130) << " " << endl;
 
     cout << "Yakin hapus? (y/t): ";
     cin >> yakin;
@@ -385,7 +446,9 @@ void editData() {
     }
 
     cout << "\nData lama:\n";
-    tampilSatu(edit);
+    headertabel();
+    tampilSatu(edit, 1);
+    cout << setfill('-') << setw(115) << " " << endl;
 
     cout << "\n//menu edit\n";
     cout << "1. Edit nama\n";
@@ -394,6 +457,7 @@ void editData() {
     cout << "4. Edit harga\n";
     cout << "5. Edit expired\n";
     cout << "6. Edit semua\n";
+    cout << "7. Batal Edit\n";
     cout << "Pilih: ";
     
     if(!(cin >> pilih)) {
@@ -459,7 +523,14 @@ void editData() {
             cout << "Salah input.\nExpired baru: ";
             cin.clear(); cin.ignore(1000, '\n');
         }
-    } 
+    }
+    else if (pilih == 7)
+    {
+        cout << "Edit dibatalkan\n";
+        system("pause");
+        return;
+    }
+     
     else {
         cout << "Pilihan tidak valid.\n";
         system("pause");
@@ -541,11 +612,58 @@ void hapusMemori() {
     head = NULL;
 }
 
+//Login
+void login()
+{
+    bool login = false;
+    string username, password;
+    int kesempatan = 3;
+
+    system("cls");
+    cout << "\n=== LOGIN ADMIN ===\n";
+
+    do
+    {
+        cout << "Username : ";
+        getline(cin, username);
+        cout << "Password : ";
+        getline(cin, password);
+
+        for (int i = 0; i < 2; i++)
+        {
+            if (username == akun[i].username && password == akun[i].password)
+            {
+                login = true;
+                break;
+            }
+        }
+        if (!login)
+        {
+            kesempatan--;
+            cout << "Username atau Password salah, Kesempatan tersisa " << kesempatan << endl;
+        }
+    } while ((!login) && (kesempatan > 0));
+    
+    if (!login)
+    {
+        cout << "Kesempatan login habis!\n";
+        system("pause");
+        exit(0);
+    }
+    cout << "\nLogin berhasil, selamat datanh " << username << endl;
+    system("pause");
+}
+
 //menu
 int main() {
     system("cls");
     int pilih;
 
+    //login menggunakan akun yang disediakan
+    login();
+
+    system("cls");
+    cout << "\n=== TANGGAL ===\n";
     cout << "Masukkan tanggal hari ini YYYYMMDD: ";
     while (!(cin >> tanggalSekarang)) {
         cout << "Input harus angka YYYYMMDD: ";
