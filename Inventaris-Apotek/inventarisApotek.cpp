@@ -78,6 +78,78 @@ bool idSudahAda(string id) {
     return false;
 }
 
+//buat id otomatis sesuai jenis
+string buatid(string jenisobat) {
+    
+    string idawal;
+    int hitung;
+
+    if (jenisobat == "Kapsul" || jenisobat == "kapsul") {
+        idawal = "KL";
+    } else if (jenisobat == "Tablet" || jenisobat == "tablet") {
+        idawal = "TB";
+    } else if (jenisobat == "Sirup" || jenisobat == "sirup") {
+        idawal = "SR";
+    } else if (jenisobat == "Salep" || jenisobat == "salep") {
+        idawal = "SP";
+    }
+
+    if (head != NULL) {
+        Node* bantu = head;
+        do {
+            if (bantu->data.jenis == jenisobat) {
+                hitung++;
+            }
+            bantu = bantu->next;
+        } while (bantu != head);
+    }
+
+    int urutan = hitung + 1;
+    string idnya;
+
+    do
+    {
+        char no1 = '0' + (urutan / 10);
+        char no2 = '0' + (urutan % 10);
+
+        idnya = idawal + no1 + no2;
+        if (idSudahAda(idnya)) {
+            urutan++;
+        }
+
+    } while (idSudahAda(idnya));
+
+    return idnya;
+}
+
+//pilihan jenis cuma 4
+string jenisobat() {
+    string jenis;
+
+    while (true) 
+    {
+        cout << "Jenis obat (Kapsul/Tablet/Sirup/Salep) : ";
+        getline(cin, jenis);
+
+        if (jenis == "Kapsul" || jenis == "kapsul" || jenis == "Tablet" || jenis == "tablet" ||
+            jenis == "Sirup" || jenis == "sirup" || jenis == "Salep" || jenis == "salep")
+            {
+                if (jenis == "kapsul") {
+                    jenis = "Kapsul";
+                } else if (jenis == "tablet") {
+                    jenis = "Tablet";
+                } else if (jenis == "sirup") {
+                    jenis = "Sirup";
+                } else if (jenis == "salep") {
+                    jenis = "Salep";
+                }
+                return jenis;
+            } else {
+                cout << "Masukkan sesuai pilihan" << endl;
+            } 
+    }
+}
+
 //tambah node
 void tambahNode(Obat obatBaru) {
     Node* baru = new Node;
@@ -99,17 +171,25 @@ void tambahNode(Obat obatBaru) {
     }
 }
 
+//tampilan header
+void header(string judul)
+{
+	cout << setfill('=') << setw(120) << " " << endl;
+	cout << "\t\t\t\t\t\t" << judul << endl;
+	cout << setfill('=') << setw(120) << " " << endl << endl;
+}
+
 //input data
 void inputData() {
     system("cls");
     int input;
     
-    cout << "\n=== INPUT DATA ===\n";
+    header("INPUT DATA");
 
-    cout << "Ingin input berapa data? : ";
+    cout << "Ingin input berapa data?               : ";
     //error handling jumlah data (input harus angka)
     while (!(cin >> input)) {
-        cout << "Input harus berupa angka : ";
+        cout << "Input harus berupa angka           : ";
         cin.clear();
         cin.ignore(1000, '\n');
     }
@@ -120,47 +200,38 @@ void inputData() {
 
         cout << "\nData ke-" << i + 1 << endl;
 
-        //error handling ID (ID harus berbeda)
-        cout << "ID obat       : ";
-        while (!(cin >> obatBaru.id) || idSudahAda(obatBaru.id))
-        {
-            cout << "Error: ID sudah ada.\n";
-            cout << "ID obat       : ";
-            cin.clear();
-            cin.ignore(1000,'\n');
-        }
-
         cin.ignore();
 
-        cout << "Nama obat     : ";
+        cout << "Nama obat                              : ";
         getline(cin, obatBaru.nama);
 
-        cout << "Jenis obat    : ";
-        getline(cin, obatBaru.jenis);
+        obatBaru.jenis = jenisobat();
+
+        obatBaru.id = buatid(obatBaru.jenis);
 
         // Error handling stok (input harus angka)
-        cout << "Stok          : ";
+        cout << "Stok                                   : ";
         while (!(cin >> obatBaru.stok) || obatBaru.stok < 0) {
             cout << "Input tidak valid (harus angka & tidak negatif).\n";
-            cout << "Stok          : ";
+            cout << "Stok                                   : ";
             cin.clear();
             cin.ignore(1000, '\n');
         }
 
         // Error handling harga (input harus angka)
-        cout << "Harga         : ";
+        cout << "Harga                                  : ";
         while (!(cin >> obatBaru.harga) || obatBaru.harga < 0) {
             cout << "Input tidak valid (harus angka & tidak negatif).\n";
-            cout << "Harga         : ";
+            cout << "Harga                                  : ";
             cin.clear();
             cin.ignore(1000, '\n');
         }
 
         // Error handling expired (input harus angka)
-        cout << "Expired YYYYMMDD : ";
+        cout << "Expired YYYYMMDD                       : ";
         while (!(cin >> obatBaru.expired)) {
             cout << "Input tidak valid (harus format YYYYMMDD).\n";
-            cout << "Expired YYYYMMDD : ";
+            cout << "Expired YYYYMMDD                       : ";
             cin.clear();
             cin.ignore(1000, '\n');
         }
@@ -186,7 +257,7 @@ void headertabel()
         << setw(8) << "Harga" << " | "
         << setw(10) << "Expired" << " | "
         << setw(12) << "Status Stok" << " | "
-        << setw(12) << "Status Expaired" << "| ";
+        << setw(12) << "Status Expaired" << "| " << endl;
     cout << setfill('-') << setw(115) << " " << endl;
     
 }
@@ -209,7 +280,7 @@ void tampilSatu(Node* bantu, int nomor) {
 //lihat data
 void lihatData() {
     system("cls");
-    cout << "\n=== LIHAT DATA ===\n";
+    header("LIHAT DATA");
 
     if (head == NULL) {
         cout << "Data masih kosong.\n";
@@ -281,7 +352,7 @@ void menuSorting() {
     system("cls");
     int pilih;
 
-    cout << "\n=== SORTING STOK ===\n";
+    header("SORTING STOK");
     cout << "1. Ascending\n";
     cout << "2. Descending\n";
     cout << "Pilih: ";
@@ -303,7 +374,7 @@ void menuSorting() {
 //search jenis
 void searchJenis() {
     system("cls");
-    cout << "\n=== SEARCH JENIS ===\n";
+    header("SEARCH JENIS");
 
     if (head == NULL) {
         cout << "Data masih kosong.\n";
@@ -318,6 +389,17 @@ void searchJenis() {
 
     cout << "Masukkan jenis obat: ";
     getline(cin, cari);
+
+    //error handling jika serach huruf kecil
+    if (cari == "kapsul") {
+        cari = "Kapsul";
+    } else if (cari == "tablet") {
+        cari = "Tablet";
+    } else if (cari == "sirup") {
+        cari = "Sirup";
+    } else if (cari == "salep") {
+        cari = "Salep";
+    }
 
     Node* bantu = head;
     int nomor = 1;
@@ -364,7 +446,7 @@ Node* cariID(string id) {
 //delete data
 void deleteData() {
     system("cls");
-    cout << "\n=== DELETE DATA ===\n";
+    header("DELETE DATA");
 
     if (head == NULL) {
         cout << "Data masih kosong.\n";
@@ -423,7 +505,7 @@ void deleteData() {
 //edit data
 void editData() {
     system("cls");
-    cout << "\n=== EDIT DATA ===\n";
+    header("EDIT DATA");
 
     if (head == NULL) {
         cout << "Data masih kosong.\n";
@@ -450,7 +532,7 @@ void editData() {
     tampilSatu(edit, 1);
     cout << setfill('-') << setw(115) << " " << endl;
 
-    cout << "\n//menu edit\n";
+    cout << "\nMenu Edit\n";
     cout << "1. Edit nama\n";
     cout << "2. Edit jenis\n";
     cout << "3. Edit stok\n";
@@ -476,7 +558,7 @@ void editData() {
     } 
     else if (pilih == 2) {
         cout << "Jenis baru: ";
-        getline(cin, edit->data.jenis);
+        edit->data.jenis = jenisobat();
     } 
     else if (pilih == 3) {
         cout << "Stok baru: ";
@@ -504,8 +586,8 @@ void editData() {
         getline(cin, edit->data.nama);
 
         cout << "Jenis baru: ";
-        getline(cin, edit->data.jenis);
-
+        edit->data.jenis = jenisobat();
+        
         cout << "Stok baru: ";
         while (!(cin >> edit->data.stok) || edit->data.stok < 0) {
             cout << "Salah input.\nStok baru: ";
@@ -620,8 +702,8 @@ void login()
     int kesempatan = 3;
 
     system("cls");
-    cout << "\n=== LOGIN ADMIN ===\n";
-
+    header("LOGIN ADMIN");
+    
     do
     {
         cout << "Username : ";
@@ -663,7 +745,7 @@ int main() {
     login();
 
     system("cls");
-    cout << "\n=== TANGGAL ===\n";
+    header("TANGGAL");
     cout << "Masukkan tanggal hari ini YYYYMMDD: ";
     while (!(cin >> tanggalSekarang)) {
         cout << "Input harus angka YYYYMMDD: ";
@@ -675,7 +757,7 @@ int main() {
 
     do {
         system("cls");
-        cout << "\n=== INVENTARIS APOTEK ===\n";
+        header("INVENTARIS APOTEK");
         cout << "1. Input Data\n";
         cout << "2. Lihat Data\n";
         cout << "3. Sorting\n";
