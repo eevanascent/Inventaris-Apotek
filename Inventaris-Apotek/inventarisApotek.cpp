@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
-#include <stdlib.h> // Ditambahkan untuk system("cls")
-#include <iomanip> // ditambahkan untuk setw
+#include <stdlib.h>
+#include <iomanip>
 using namespace std;
 
 //admin
@@ -122,7 +122,6 @@ string buatid(string jenisobat) {
     return idnya;
 }
 
-//pilihan jenis cuma 4
 string jenisobat() {
     string jenis;
 
@@ -187,7 +186,7 @@ void inputData() {
     header("INPUT DATA");
 
     cout << "Ingin input berapa data?               : ";
-    //error handling jumlah data (input harus angka)
+
     while (!(cin >> input)) {
         cout << "Input harus berupa angka           : ";
         cin.clear();
@@ -209,7 +208,6 @@ void inputData() {
 
         obatBaru.id = buatid(obatBaru.jenis);
 
-        // Error handling stok (input harus angka)
         cout << "Stok                                   : ";
         while (!(cin >> obatBaru.stok) || obatBaru.stok < 0) {
             cout << "Input tidak valid (harus angka & tidak negatif).\n";
@@ -218,7 +216,6 @@ void inputData() {
             cin.ignore(1000, '\n');
         }
 
-        // Error handling harga (input harus angka)
         cout << "Harga                                  : ";
         while (!(cin >> obatBaru.harga) || obatBaru.harga < 0) {
             cout << "Input tidak valid (harus angka & tidak negatif).\n";
@@ -227,7 +224,6 @@ void inputData() {
             cin.ignore(1000, '\n');
         }
 
-        // Error handling expired (input harus angka)
         cout << "Expired YYYYMMDD                       : ";
         while (!(cin >> obatBaru.expired)) {
             cout << "Input tidak valid (harus format YYYYMMDD).\n";
@@ -660,14 +656,14 @@ void bacaFile() {
     string stokText, hargaText, expiredText;
 
     while (getline(file, obat.id)) {
-        if (obat.id == "") break; // Error handling file kosong
+        if (obat.id == "") break; // ini kl file nya kosong
         getline(file, obat.nama);
         getline(file, obat.jenis);
         getline(file, stokText);
         getline(file, hargaText);
         getline(file, expiredText);
 
-        // Konversi string ke int
+        // ubah string ke int
         obat.stok = atoi(stokText.c_str());
         obat.harga = atoi(hargaText.c_str());
         obat.expired = atoi(expiredText.c_str());
@@ -732,7 +728,7 @@ void login()
         system("pause");
         exit(0);
     }
-    cout << "\nLogin berhasil, selamat datanh " << username << endl;
+    cout << "\nLogin berhasil, selamat datang, " << username << endl;
     system("pause");
 }
 
@@ -741,7 +737,6 @@ int main() {
     system("cls");
     int pilih;
 
-    //login menggunakan akun yang disediakan
     login();
 
     system("cls");
@@ -766,12 +761,11 @@ int main() {
         cout << "6. Edit\n";
         cout << "7. Exit\n";
         cout << "Pilih menu: ";
-        
-        // Error handling input menu
+    
         if (!(cin >> pilih)) {
             cin.clear();
             cin.ignore(1000, '\n');
-            pilih = 0; // Memaksa masuk ke pilihan tidak valid
+            pilih = 0;
         }
 
         if (pilih == 1) {
